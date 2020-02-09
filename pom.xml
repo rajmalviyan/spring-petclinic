@@ -286,7 +286,7 @@
   </licenses>
 
   <repositories>
-    <repository>
+    <!--<repository>
       <id>spring-snapshots</id>
       <name>Spring Snapshots</name>
       <url>https://repo.spring.io/snapshot</url>
@@ -301,7 +301,18 @@
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
-    </repository>
+    </repository>-->
+
+      <repository>
+          <id>deutscheBankDemoOrg</id>
+          <url>https://pkgs.dev.azure.com/deutscheBankDemoOrg/_packaging/deutscheBankDemoOrg/maven/v1</url>
+          <releases>
+              <enabled>true</enabled>
+          </releases>
+          <snapshots>
+              <enabled>true</enabled>
+          </snapshots>
+      </repository>
   </repositories>
 
   <pluginRepositories>
