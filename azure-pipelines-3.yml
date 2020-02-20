@@ -1,0 +1,42 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Subscription'
+    azureResourceManagerConnection: 'Sandbox-Subscription-018 (cfcdfd0b-26ef-46eb-bef5-38aa34de648c)'
+    subscriptionId: 'cfcdfd0b-26ef-46eb-bef5-38aa34de648c'
+    location: 'West India'
+    templateLocation: 'Linked artifact'
+    csmFile: 'pet-clinic-arm'
+    deploymentMode: 'Incremental'
+    - task: Maven@3
+      inputs:
+        mavenPomFile: 'pom.xml'
+        publishJUnitResults: true
+        testResultsFiles: '**/surefire-reports/TEST-*.xml'
+        testRunTitle: 'pet-clinic-test'
+        codeCoverageToolOption: 'JaCoCo'
+        javaHomeOption: 'JDKVersion'
+        mavenVersionOption: 'Default'
+        mavenAuthenticateFeed: false
+        effectivePomSkip: false
+        sonarQubeRunAnalysis: false
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Sandbox-Subscription-018 (cfcdfd0b-26ef-46eb-bef5-38aa34de648c)'
+    appType: 'webAppLinux'
+    WebAppName: 'pet-clinic'
+    deployToSlotOrASE: true
+    ResourceGroupName: 'int'
+    SlotName: 'production'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    RuntimeStack: 'JAVA|8-jre8'
